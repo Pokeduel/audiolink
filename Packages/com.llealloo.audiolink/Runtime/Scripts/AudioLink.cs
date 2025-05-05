@@ -764,10 +764,13 @@ namespace AudioLink
             int j = 0;
             for (int i = 0; i < GlobalStringPackedVectorsLength; i++)
             {
-                if (j < codePointsLength) globalStringPackedVectors[i].x = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
-                if (j < codePointsLength) globalStringPackedVectors[i].y = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
-                if (j < codePointsLength) globalStringPackedVectors[i].z = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
-                if (j < codePointsLength) globalStringPackedVectors[i].w = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
+                // re-allocate structs as modifying them directly in C# is illegal
+                Vector4 packedVector = globalStringPackedVectors[i];
+                if (j < codePointsLength) packedVector.x = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
+                if (j < codePointsLength) packedVector.y = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
+                if (j < codePointsLength) packedVector.z = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
+                if (j < codePointsLength) packedVector.w = IntToFloatBits24Bit((uint)globalStringCodePoints[j++]); else break;
+                globalStringPackedVectors[i] = packedVector;
             }
 
             // Expose the vectors to shader without causing additional allocations
